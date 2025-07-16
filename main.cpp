@@ -32,7 +32,7 @@ struct Point {
 };
 
 bool isValid(int x, int y) {
-    return x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT && maze[y][x] == '.';
+    return x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT && (maze[y][x] == '.' || maze[y][x] == 'F');
 }
 
 void printMaze() {
@@ -65,7 +65,8 @@ bool waveAlgorithm(Point start, Point end) {
 
     Point p = end;
     while (!(p.x == start.x && p.y == start.y)) {
-        maze[p.y][p.x] = '*';
+        if (maze[p.y][p.x] != 'F') 
+            maze[p.y][p.x] = '*';
         for (int i = 0; i < 4; ++i) {
             int nx = p.x + dx[i];
             int ny = p.y + dy[i];
@@ -89,7 +90,6 @@ int main() {
 
     Point start, end;
 
-    
     vector<Point> emptyCells;
     for (int y = 0; y < HEIGHT; ++y) {
         for (int x = 0; x < WIDTH; ++x) {
@@ -104,30 +104,28 @@ int main() {
         return 1;
     }
 
-    
     start = emptyCells[rand() % emptyCells.size()];
     do {
         end = emptyCells[rand() % emptyCells.size()];
     } while (start.x == end.x && start.y == end.y);
 
- 
+    if (!isValid(start.x, start.y) || !isValid(end.x, end.y)) {
+        cout << "Ошибка: некорректные старт или финиш.\n";
+        return 1;
+    }
+
     maze[start.y][start.x] = 'S';
     maze[end.y][end.x] = 'F';
 
-    cout << "Лабиринт:\n";
+    cout << "Лабиринт с установленными S и F:\n";
     printMaze();
 
     cout << "\nСлучайные координаты:\n";
     cout << "Старт (x y): " << start.x << " " << start.y << endl;
     cout << "Финиш (x y): " << end.x << " " << end.y << endl;
 
-    if (!isValid(start.x, start.y) || !isValid(end.x, end.y)) {
-        cout << "Начало = '" << maze[start.y][start.x] << "', конец = '" << maze[end.y][end.x] << "'\n";
-        return 1;
-    }
-
     if (waveAlgorithm(start, end)) {
-        cout << "\nПуть найден:\n";
+        cout << "\nПуть найден. Итоговый лабиринт:\n";
         printMaze();
     }
     else {
@@ -136,4 +134,5 @@ int main() {
 
     return 0;
 }
+
 
