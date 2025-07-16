@@ -2,6 +2,8 @@
 #include <queue>
 #include <vector>
 #include <windows.h>
+#include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -81,20 +83,44 @@ bool waveAlgorithm(Point start, Point end) {
 }
 
 int main() {
-    SetConsoleOutputCP(1251); 
+    SetConsoleOutputCP(1251);
     SetConsoleCP(1251);
+    srand(time(0));
 
     Point start, end;
+
+    
+    vector<Point> emptyCells;
+    for (int y = 0; y < HEIGHT; ++y) {
+        for (int x = 0; x < WIDTH; ++x) {
+            if (maze[y][x] == '.') {
+                emptyCells.push_back({ x, y });
+            }
+        }
+    }
+
+    if (emptyCells.size() < 2) {
+        cout << "Недостаточно пустых клеток для старта и финиша.\n";
+        return 1;
+    }
+
+    
+    start = emptyCells[rand() % emptyCells.size()];
+    do {
+        end = emptyCells[rand() % emptyCells.size()];
+    } while (start.x == end.x && start.y == end.y);
+
+ 
+    maze[start.y][start.x] = 'S';
+    maze[end.y][end.x] = 'F';
 
     cout << "Лабиринт:\n";
     printMaze();
 
-    cout << "\nВведите координаты начала (x y): ";
-    cin >> start.x >> start.y;
-    cout << "Введите координаты выхода (x y): ";
-    cin >> end.x >> end.y;
+    cout << "\nСлучайные координаты:\n";
+    cout << "Старт (x y): " << start.x << " " << start.y << endl;
+    cout << "Финиш (x y): " << end.x << " " << end.y << endl;
 
-    // Проверка корректности координат
     if (!isValid(start.x, start.y) || !isValid(end.x, end.y)) {
         cout << "\nОшибка: координаты должны указывать на пустую клетку ('.').\n";
         cout << "Начало = '" << maze[start.y][start.x] << "', конец = '" << maze[end.y][end.x] << "'\n";
