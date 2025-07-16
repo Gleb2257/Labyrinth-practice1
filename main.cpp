@@ -122,7 +122,6 @@ int main() {
     cout << "Финиш (x y): " << end.x << " " << end.y << endl;
 
     if (!isValid(start.x, start.y) || !isValid(end.x, end.y)) {
-        cout << "\nОшибка: координаты должны указывать на пустую клетку ('.').\n";
         cout << "Начало = '" << maze[start.y][start.x] << "', конец = '" << maze[end.y][end.x] << "'\n";
         return 1;
     }
@@ -137,3 +136,4 @@ int main() {
 
     return 0;
 }
+
